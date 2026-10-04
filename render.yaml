@@ -1,0 +1,20 @@
+# Render Blueprint for the backend. The Streamlit frontend goes on Streamlit Community Cloud (see README).
+services:
+  - type: web
+    name: scamlens-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: SCAMLENS_AI_PROVIDER
+        value: anthropic
+      - key: ANTHROPIC_API_KEY
+        sync: false          # paste in the Render dashboard
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5-20251001
+      - key: SCAMLENS_API_TOKEN
+        generateValue: true  # copy this value into the Streamlit secrets
+      - key: SCAMLENS_TRUST_PROXY
+        value: "1"
+      # SQLite lives on the container disk. On Render's free plan it resets on redeploy;
+      # attach a persistent disk (paid) mounted at /app/data to keep history.
